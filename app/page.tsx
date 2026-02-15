@@ -21,11 +21,11 @@ export default async function Home() {
     <main className="min-h-screen p-8 bg-orange-50 flex flex-col items-center">
       <div className="max-w-2xl w-full">
         <h1 className="text-3xl font-bold text-amber-900 mb-8 border-b-2 border-amber-200 pb-2">
-          みんなの学びカフェ☕️
+          Learning Log App
         </h1>
         
         {/* 📝 入力フォーム部分 */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-8">
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-8 text-black">
           <h2 className="text-xl font-bold text-gray-800 mb-4">
             今日の学びを記録しよう
           </h2>
@@ -53,12 +53,13 @@ export default async function Home() {
         <div className="flex flex-col gap-4">
           {posts.map((post) => (
             <div key={post.id} className="bg-white p-6 rounded-xl shadow-sm border border-orange-100 relative group">
+
+              
+              <h3 className="text-lg font-bold text-gray-800 mb-2 pr-8">{post.title}</h3>
               {/* 👇 日付の表示を追加！ */}
               <p className="text-sm text-amber-600 font-medium mb-1">
                 {formatDate(post.created_at)}
               </p>
-              
-              <h3 className="text-lg font-bold text-gray-800 mb-2 pr-8">{post.title}</h3>
               <p className="text-gray-600 whitespace-pre-wrap">{post.content}</p>
               
               <DeleteButton id={post.id} />
