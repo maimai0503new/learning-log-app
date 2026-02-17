@@ -7,7 +7,7 @@ export default function DeleteButton({ id }: { id: string }) { // idの型が数
   return (
     <form 
       action={deletePost} 
-      className="absolute top-6 right-6"
+      className=""
       // 💡 送信ボタンが押された瞬間に、この処理が走ります
       onSubmit={(e) => {
         // 確認ダイアログを出し、「キャンセル」が押されたら...

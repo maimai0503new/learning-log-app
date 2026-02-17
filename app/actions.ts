@@ -1,5 +1,5 @@
 'use server'
-
+import { redirect } from "next/navigation";
 import { prisma } from '../utils/prisma';
 import { revalidatePath } from 'next/cache';
 
@@ -46,4 +46,24 @@ export async function deletePost(formData: FormData) {
 
   // 3. 削除が終わったら、トップページを最新状態に更新！
   revalidatePath('/');
+}
+
+export async function updatePost(formData: FormData){
+  const id = formData.get('id') as string;
+  const title = formData.get('title') as string;
+  const content = formData.get('content') as string;
+
+  if (!id || !title || !content) return;
+
+  await prisma.post.update({
+    where: {id: id},
+    data: {
+      title: title,
+      content: content,
+    },
+  });
+
+  revalidatePath('/');
+
+  redirect('/');
 }

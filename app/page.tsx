@@ -3,6 +3,7 @@ import { createPost } from './actions';
 import { prisma } from '../utils/prisma';
 import DeleteButton from '../components/DeleteButton';
 import SubmitButton from '../components/SubmitButton'; // 👈 追加！
+import Link from 'next/link';
 
 // 💡 日付を綺麗にフォーマットする関数（例：2026/02/15 14:30）
 const formatDate = (date: Date) => {
@@ -57,12 +58,33 @@ export default async function Home() {
               
               <h3 className="text-lg font-bold text-gray-800 mb-2 pr-8">{post.title}</h3>
               {/* 👇 日付の表示を追加！ */}
-              <p className="text-sm text-amber-600 font-medium mb-1">
-                {formatDate(post.created_at)}
-              </p>
+              <div className="flex gap-4 text-xs text-amber-600 font-medium mb-2">
+                <span>🌱 作成: {formatDate(post.created_at)}</span>
+        
+        {/* 💡 もし作成日時と更新日時が違う（＝編集された）場合だけ、更新日時を出すとスマートです */}
+        {post.created_at.getTime() !== post.updated_at.getTime() && (
+          <span className="text-gray-500">
+            🔄 更新: {formatDate(post.updated_at)}
+          </span>
+        )}
+      </div>
               <p className="text-gray-600 whitespace-pre-wrap">{post.content}</p>
-              
-              <DeleteButton id={post.id} />
+             {/* 👇 右上のボタンエリアをまとめるdivを追加 */}
+              <div className="absolute top-6 right-6 flex gap-3">
+                {/* ✏️ 編集ページ（/edit/投稿のID）へのリンク */}
+                <Link
+                  href={`/edit/${post.id}`} 
+                  className="text-gray-300 hover:text-blue-500 transition-colors"
+                  title="編集する"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+                  </svg>
+                </Link>
+                
+                {/* 🗑️ 元々あった削除ボタン */}
+                <DeleteButton id={post.id} />
+              </div>
             </div>
           ))}
           

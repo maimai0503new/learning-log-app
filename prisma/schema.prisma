@@ -24,6 +24,7 @@ model Post {
   title      String
   content    String
   created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
   user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   comments   Comment[]
   reactions  Reaction[]
