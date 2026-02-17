@@ -117,7 +117,8 @@ export async function updatePost(formData: FormData){
 
   redirect('/');
 }
-export async function searchBooksList(keyword: string) {
+
+export async function searchBooksList(keyword: string): Promise<{title: string, author: string | null, ndc: string | null}[]> {
   if (!keyword) return [];
   
   try {
@@ -132,9 +133,12 @@ export async function searchBooksList(keyword: string) {
     const results = items.map(itemXml => {
       const titleMatch = itemXml.match(/<title>([^<]+)<\/title>/);
       const ndcMatch = itemXml.match(/<dc:subject[^>]*NDC[^>]*>([^<]+)<\/dc:subject>/);
-      const authorMatch = itemXml.match(/<dc:creator[^>]*>([^<]+)<\/dc:creator>/) || itemXml.match(/<author[^>]*>([^<]+)<\/author>/);     
+      // 💡 作者を抜き出す！
+      const authorMatch = itemXml.match(/<dc:creator[^>]*>([^<]+)<\/dc:creator>/) || itemXml.match(/<author[^>]*>([^<]+)<\/author>/);
+      
       return {
         title: titleMatch ? titleMatch[1] : "不明なタイトル",
+        author: authorMatch ? authorMatch[1] : null, // 👈 これが Vercel が欲しがっていたデータです！
         ndc: ndcMatch ? ndcMatch[1] : null,
       };
     });
