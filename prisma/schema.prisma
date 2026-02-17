@@ -17,10 +17,20 @@ model User {
   reactions  Reaction[]
 }
 
+model Book{
+  id         String     @id @default(uuid())
+  title      String 
+  author     String?
+  ndc        String?
+  posts      Post[]
+
+}
+
 // 2. postsテーブル（学びの記録）
 model Post {
   id         String     @id @default(uuid())
   user_id    String
+
   title      String
   content    String
   created_at DateTime   @default(now())
@@ -28,6 +38,9 @@ model Post {
   user       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
   comments   Comment[]
   reactions  Reaction[]
+  book_id    String?
+  book       Book?      @relation(fields: [book_id],references:[id])
+
 }
 
 // 3. commentsテーブル

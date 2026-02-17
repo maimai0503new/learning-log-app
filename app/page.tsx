@@ -4,6 +4,7 @@ import { prisma } from '../utils/prisma';
 import DeleteButton from '../components/DeleteButton';
 import SubmitButton from '../components/SubmitButton'; // 👈 追加！
 import Link from 'next/link';
+import BookSearch from '../components/BookSearch';
 
 // 💡 日付を綺麗にフォーマットする関数（例：2026/02/15 14:30）
 const formatDate = (date: Date) => {
@@ -12,10 +13,23 @@ const formatDate = (date: Date) => {
     hour: '2-digit', minute: '2-digit'
   }).format(date);
 };
-
+function getNdcLabel(ndc: string | null) {
+  if (!ndc) return null;
+  const firstChar = ndc.charAt(0);
+  const ndcMap: Record<string, string> = {
+    '0': '総記', '1': '哲学', '2': '歴史', '3': '社会科学', '4': '自然科学',
+    '5': '技術', '6': '産業', '7': '芸術', '8': '言語', '9': '文学'
+  };
+  if (ndcMap[firstChar]) return `${ndcMap[firstChar]}（${ndc}）`;
+  if (firstChar === 'M') return `文学（${ndc}）`;
+  return `その他（${ndc}）`;
+}
 export default async function Home() {
   const posts = await prisma.post.findMany({
-    orderBy: { created_at: 'desc' }
+    orderBy: { created_at: 'desc' },
+    include: {
+      book: true, // 👈 これがリレーショナルデータベース最大の魔法です✨
+    }
   });
 
   return (
@@ -38,6 +52,7 @@ export default async function Home() {
               className="border border-gray-300 rounded-lg p-3 outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-200 transition"
               required
             />
+            <BookSearch />
             <textarea 
               name="content" 
               placeholder="どんなことを学びましたか？" 
@@ -57,6 +72,19 @@ export default async function Home() {
 
               
               <h3 className="text-lg font-bold text-gray-800 mb-2 pr-8">{post.title}</h3>
+
+{post.book && (
+        <div className="mb-4 p-3 bg-orange-50 rounded-lg border border-orange-200">
+          <p className="text-sm font-bold text-gray-800">
+            📖 {post.book.title} {post.book.author ? `：${post.book.author}` : ""}
+          </p>
+          {post.book.ndc && (
+            <span className="inline-block mt-1 bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded-full border border-blue-200">
+              🏷️ 分類: {getNdcLabel(post.book.ndc)}
+            </span>
+          )}
+        </div>
+      )}
               {/* 👇 日付の表示を追加！ */}
               <div className="flex gap-4 text-xs text-amber-600 font-medium mb-2">
                 <span>🌱 作成: {formatDate(post.created_at)}</span>
