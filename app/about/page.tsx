@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function About() {
   return (
-    <div className="min-h-screen bg-orange-50 p-8">
+
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-sm border border-orange-100">
         
         {/* タイトルエリア */}
@@ -48,6 +48,5 @@ export default function About() {
         </div>
 
       </div>
-    </div>
   );
 }
