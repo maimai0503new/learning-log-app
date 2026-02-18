@@ -33,12 +33,19 @@ export default async function Home() {
   });
 
   return (
-    <main className="min-h-screen p-8 bg-orange-50 flex flex-col items-center">
-      <div className="max-w-2xl w-full">
+    <main className="min-h-screen p-8 bg-orange-50 p-8">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-amber-900 mb-8 border-b-2 border-amber-200 pb-2">
           Learning Log App
         </h1>
-        
+        <Link 
+          href="/about" 
+          className="text-sm font-bold text-orange-600 hover:text-orange-800 hover:underline"
+        >
+          このアプリについて ➜
+        </Link>
+        </div>        
         {/* 📝 入力フォーム部分 */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-orange-100 mb-8 text-black">
           <h2 className="text-xl font-bold text-gray-800 mb-4">
